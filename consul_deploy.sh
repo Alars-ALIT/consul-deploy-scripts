@@ -7,6 +7,7 @@
 : ${BRIDGE_IP:=10.1.1.3}
 : ${CONSUL_HTTP_PORT:=8500}
 : ${DEBUG:=1}
+: ${DOCKER_HOST:=unix:///tmp/docker.sock}
 DEPLOY_KEY=$1
 
 
@@ -54,10 +55,10 @@ deploy(){
   declare runCmd="$3"		
   
   echo "Pulling $imageName"
-  docker pull $imageName
+  docker -H $DOCKER_HOST pull $imageName
   
   echo "Removing any existing containger with name $containerName"
-  docker rm -f $containerName  > /dev/null 2>&1 || true
+  docker -H $DOCKER_HOST rm -f $containerName  > /dev/null 2>&1 || true
   
   echo "Starting container with: $runCmd"
   $runCmd
